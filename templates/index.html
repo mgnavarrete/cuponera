@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12/12/2025</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ESTILOS GENERALES (TUS ESTILOS ORIGINALES) --- */
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: #1a1a1a; /* Fondo oscuro para el slideshow */
+            overflow-x: hidden;
+            margin: 0;
+        }
+        
+        [v-cloak] { display: none; }
+
+        /* --- FONDO ANIMADO HIBISCUS (LOGIN) --- */
+        .login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            z-index: 3000; /* Capa superior */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 1.5s cubic-bezier(0.86, 0, 0.07, 1); /* Salida suave hacia arriba */
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- TARJETA DE LOGIN --- */
+        .login-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            color: white;
+        }
+
+        .login-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .custom-input {
+            background: rgba(255, 255, 255, 0.6);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 25px;
+            width: 100%;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #555;
+            transition: all 0.3s;
+            outline: none;
+        }
+        .custom-input:focus {
+            background: white;
+            box-shadow: 0 0 15px rgba(255,255,255,0.5);
+        }
+
+        .btn-enter {
+            background: #fff;
+            color: #ff9a9e;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 30px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        .btn-enter:hover {
+            transform: scale(1.05);
+            color: #e73c7e;
+        }
+
+        /* --- PISTAS --- */
+        .hints-container {
+            margin-top: 20px;
+            display: flex; flex-direction: column; gap: 8px; align-items: center;
+        }
+        .hint-badge {
+            font-size: 0.9rem; color: #fff; font-weight: 500;
+            background: rgba(0,0,0,0.2); padding: 8px 15px; border-radius: 20px;
+            display: inline-block; width: 100%;
+            animation: slideIn 0.5s ease forwards; opacity: 0; transform: translateY(10px);
+        }
+        @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
+
+        /* --- ANIMACIONES LOGIN --- */
+        .shake { animation: shake 0.5s; }
+        @keyframes shake {
+            0% { transform: translateX(0); } 25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); } 75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+
+        .circle {
+            position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.3);
+            animation: float 6s infinite ease-in-out; z-index: -1;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); } 50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* CLASE PARA OCULTAR LOGIN (Ahora usamos slide-up) */
+        .slide-up-fade {
+            transform: translateY(-100%);
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           NUEVOS ESTILOS PARA LA HISTORIA (SCROLL) Y FOTOS
+           ============================================================ */
+        
+        /* Capa de fondo para el slideshow */
+        .background-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+            background: #000;
+        }
+        
+        .bg-slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 0; transition: opacity 2s ease-in-out;
+            filter: brightness(0.7); /* Más claro para ver bien las fotos */
+        }
+        
+        /* Efecto Ken Burns (Movimiento suave de fotos) */
+        .ken-burns {
+            animation: kenBurns 10s infinite alternate linear;
+            opacity: 1; /* Hace visible la foto activa */
+        }
+        @keyframes kenBurns {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        /* Contenedor del texto scroll */
+        .story-container { position: relative; z-index: 10; padding-bottom: 200px; }
+        
+        .story-block { 
+            min-height: 100vh; /* Cada párrafo ocupa toda la pantalla */
+            display: flex; align-items: center; justify-content: center; 
+            padding: 20px; box-sizing: border-box;
+        }
+        
+        .story-card {
+            background: rgba(0, 0, 0, 0.3); /* Fondo oscuro muy sutil */
+            backdrop-filter: blur(2px);
+            border: none; 
+            border-radius: 20px;
+            padding: 2rem; max-width: 650px; 
+            box-shadow: none;
+            transform: translateY(50px); opacity: 0; transition: all 0.8s ease-out;
+            text-align: justify;
+            color: #fff; /* Texto blanco */
+        }
+        
+        /* Animación cuando entra el texto */
+        .story-block.active .story-card { transform: translateY(0); opacity: 1; }
+
+        /* Estilos Cupones (Fase Final) */
+        .coupons-view { 
+            background-color: #fdfbfb; min-height: 100vh; 
+            padding-top: 80px; position: relative; z-index: 20;
+            animation: fadeIn 1s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    {% verbatim %}
+    <div id="app" v-cloak>
+
+        <div class="login-screen" :class="{ 'slide-up-fade': currentPhase !== 'login' }">
+            
+            <div class="circle" style="width: 100px; height: 100px; top: 10%; left: 10%;"></div>
+            <div class="circle" style="width: 150px; height: 150px; bottom: 20%; right: 10%; animation-delay: 2s;"></div>
+            
+            <div class="login-card" :class="{ 'shake': isShaking }">
+                <h1 class="login-title">Felices 4 años!</h1>
+                <p class="mb-4 small">Ingresa la palabra clave para entrar</p>
+                
+                <form @submit.prevent="checkPassword">
+                    <input type="text" v-model="passwordInput" class="custom-input" placeholder="..." autocomplete="off">
+                    <button type="submit" class="btn-enter mt-3">ENTRAR</button>
+                </form>
+
+                <div class="hints-container" v-if="hintsList.length > 0">
+                    <div v-for="(hint, index) in hintsList" :key="index" class="hint-badge">
+                        💡 Pista {{ index + 1 }}: {{ hint }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div v-show="currentPhase === 'letter'">
+            
+            <div class="background-layer">
+                <img v-if="currentSlide" :src="currentSlide" class="bg-slide ken-burns" :key="currentSlide">
+            </div>
+
+            <div class="story-container">
+                <div v-for="(segment, index) in letterSegments" :key="index" :id="'seg-'+index" class="story-block">
+                    <div class="story-card">
+                        <h3 v-if="segment.title" style="font-family: 'Playfair Display'; color: #ffb6c1; margin-bottom: 1rem; text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+                            {{ segment.title }}
+                        </h3>
+                        <div style="font-size: 1.1rem; line-height: 1.8; color: #fff; text-shadow: 1px 1px 6px rgba(0,0,0,0.9);" v-html="segment.text"></div>
+
+                        <div v-if="index === letterSegments.length - 1" class="text-center mt-5">
+                            <a href="/cupones/" class="btn btn-lg btn-danger rounded-pill px-5 shadow pulse-btn" style="background-color: #e73c7e; border: none; text-decoration: none;">
+                                🎁 Abrir Regalo Final
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    {% endverbatim %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    // --- ESTADO GLOBAL ---
+                    currentPhase: 'login', // Puede ser: 'login', 'letter'
+
+                    // --- LOGIN DATA ---
+                    passwordInput: '',
+                    correctPassword: 'rinoceronte',
+                    attempts: 0,
+                    hintsList: [],
+                    isShaking: false,
+
+                    // --- FOTOS & SLIDESHOW ---
+                    allPhotos: [],
+                    currentPhotoList: [],
+                    currentSlide: null,
+                    slideInterval: null,
+
+                    // --- CARTA (Texto completo mapeado a años) ---
+                    letterSegments: [
+                        {
+                            title: "Feliz 4 años!",
+                            years: ["2021"], 
+                            text: "Hola Flo, bienvenida a esta gran locurita que es tu regalo de los 4 años. Estuve pensando mucho tiempo en qué te puedo regalar. Sé que soy bueno para las manualidades y que te he regalado muchas cosas locas, y quería también hacer una cosa loca para estos cuatro años. Como soy un emprendedor, un desarrollador computín y también un poco perkin, quise hacer esta página como regalo tuyo para encapsular un poco todos nuestros recuerdos y locuritas."
+                        },
+                        {
+                           
+                            text: "Estuve buscando muchas fotos que vas a ver ahora mientras lees este mensaje (se van a ir desplegando) y, mientras las revisaba, fui recordando todas las locuras que hemos hecho. Es loco ver lo rápido que pasa el tiempo. Te juro que yo miraba las fotos desde que recién apareció tu cara en Google Fotos, hace un poquito más de 4 años atrás, de cuando nos conocimos en mi casa en ese carrete muy random, y te juro que a veces es como si esto fuera ayer. La vida pasa tan rápido, o el tiempo contigo pasa aun mas rápido, que me hace sentir que lo hemos disfrutado a concho."
+                        },
+                        {
+                    
+                            text: "Hemos hecho locuras terribles, pero muy entretenidas: desde que te fuiste con nosotros al sur cuando llevábamos casi una semana juntos, hasta todos los viajes que hemos hecho con mi familia y con tu familia. Conocer San Andrés, Búzios, conocer a tus amigos, mis amigos y compartir las amistades. Siento que, para mí, ver todas esas fotos da nostalgia y harta felicidad de saber que estos años han sido muy bacanes y muy bonitos, y siento que gran parte de eso es gracias a estar contigo y a tenerte a mi lado."
+                        },
+                        {
+                          
+                            text: "Viendo esas fotos, los dos tenemos cara de niños y que pasamos de ser unos vecinos en Chicureo, compañeros de Proyecta, de ser yo tu chofer que te llevaba a los carretes porque me quedaba ahí cerca y te iba a ir a buscar, a pasar a tener una muy bonita relación, una muy bonita polola. Siento que he crecido mucho contigo y hemos vivido etapas muy importantes. Me ayudaste en muchas cosas en la U, a un poco enderezarme, a quererme, a entenderme y también a creer en mí. Siento que has sido un aporte fundamental para que yo me crea el cuento y sepa que sí, yo soy capaz y sí soy bacán. Yo creo que tú has influenciado mucho en eso también."
+                        },
+                        {
+                           
+                            text: "Hemos comenzado juntos este mundo laboral donde ahora los dos somos adultos responsables con trabajos y obligaciones. Yo creo que los dos estamos muy felices con lo que estudiamos y en dónde hemos trabajado, y a pesar de que tú tuviste tu crisis vocacional, para eso siempre hemos estado acá, para apoyarte en todo lo que necesites, guiarte también si es que necesitas apoyo en eso. Así mismo como tú me has dado todo ese apoyo, yo también estuve y estaré ahí para todo."
+                        },
+                        {
+                           
+                            text: "Me da risa que siempre he escuchado que las relaciones tienen como este periodo de luna de miel que dura tres meses y que después todo es distinto, pero yo creo que la gente no sabe lo que es realmente encontrar a alguien que calza contigo. Porque yo siento que desde el momento en que salimos, el momento en que comenzamos esta bonita relación, esa luna de miel no se ha acabado. Sí, hemos tenido sus discusiones, momentos difíciles, pero siento que todas esas cosas nos han hecho más fuertes, más unidos, y esas son las cosas que al final hacen que una pareja crezca. Siempre el tenerte a mi lado como amiga, como confidente, como polola, ha sido lo mejor que me ha pasado en esta vida."
+                        },
+
+                        {
+                     
+                            text: "Te quería también dar las gracias por todo, porque siento que estos 4 años, y donde estoy ahora mismo, no hubiera sido lo mismo sin ti. Tú has sido un pilar fundamental en todos mis logros. Aunque no es quitarme el mérito de las cosas que yo he hecho, sí has sido un impulso, una motivación, una fuente de energía gigante para sacar adelante todos los proyectos que yo me propongo. Sé que siempre has estado a mi lado apoyándome en cada fracaso, en cada logro, en cada premio, y yo creo que sin ti nunca hubiera sido lo mismo. Así que gracias por ser esa motivación."
+                        },
+                        {
+                           
+                            text: "Te amo con todo mi corazón y me emociona mucho saber todo lo que se nos viene. Si ya llevamos 4 años, que es harto tiempo, me imagino cómo será todo lo que se viene proyectos de vida, viajar, crecer... al final, vivir una vida contigo es vivir la vida, que es lo que más feliz me hace."
+                        },
+                        {
+                            
+                            text: "Y falta mencionar Orlandoooo, viaje que me tiene demasiado emocionado y feliz, pero no solamente porque vamos a Orlando y vamos a Disney y vamos a conocer a Mickey Mouse y a Harry Potter, estoy muy feliz porque siento que este va a ser un hito importante en nuestra relación. El viajar a otro país solos nos va a ayudar a crecer más de lo que ya hemos crecido, y estoy más que seguro de que me va a recalcar y asegurar de que siempre serás y fuiste tú. Te amo mucho."
+                        },
+                        {
+                            
+                            text: "Así que gracias por estos cuatro años que, de verdad, los siento como nada, que han volado, pero siento que es el comienzo de todo este proyecto de vida que de la mano vamos a construir. Te amo mucho y espero que te haya gustado este pequeño regalo. Ahora se viene un ultimo regalo, el botoncito donde, cuando lo aprietes, te va a llevar a la última parte del regalo para que lo disfrutes (y lo disfrutemos) en este viaje que se nos viene."
+                        }
+                    ]
+                }
+            },
+            mounted() {
+                this.loadPhotos();     // Carga las 180 fotos
+                this.setupObserver();  // Inicia detector de scroll
+            },
+            methods: {
+                // --- 1. LÓGICA LOGIN (TUYA) ---
+                checkPassword() {
+                    const input = this.passwordInput.toLowerCase().trim();
+                    if (input === this.correctPassword) {
+                        this.lanzarConfetiEntrada();
+                        
+                        // TRANSICIÓN A LA CARTA
+                        this.currentPhase = 'letter';
+                        
+                        // Pequeño hack para asegurar que el scroll empiece arriba
+                        setTimeout(() => window.scrollTo(0,0), 100);
+
+                    } else {
+                        // PASSWORD INCORRECTO
+                        this.triggerShake();
+                        this.attempts++;
+                        this.passwordInput = ''; 
+                        if (this.attempts === 1) this.hintsList.push("Florencia");
+                        if (this.attempts === 2) this.hintsList.push("Nombre tierno");
+                        if (this.attempts === 3) this.hintsList.push("Animal");
+                    }
+                },
+                triggerShake() {
+                    this.isShaking = true;
+                    setTimeout(() => { this.isShaking = false; }, 500);
+                },
+                lanzarConfetiEntrada() {
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff9a9e', '#fad0c4', '#ffffff'] });
+                },
+
+                // --- 2. LÓGICA DE FOTOS Y SLIDESHOW ---
+                async loadPhotos() {
+                    try {
+                        // Asegúrate de que esta URL exista en tu backend
+                        const response = await axios.get('/api/fotos/');
+                        this.allPhotos = response.data.fotos;
+                        console.log("Fotos cargadas:", this.allPhotos.length);
+                    } catch (error) { console.error("Error cargando fotos", error); }
+                },
+
+                startSlideshow(years) {
+                    // Filtrar fotos que coincidan con los años del párrafo
+                    let filtered = this.allPhotos.filter(p => years.includes(p.year));
+                    
+                    // Si no hay fotos de ese año exacto, usamos todas como respaldo
+                    if (filtered.length === 0) filtered = this.allPhotos;
+                    if (filtered.length === 0) return; // No hay fotos en absoluto
+
+                    // Mezclar aleatoriamente
+                    this.currentPhotoList = filtered.sort(() => 0.5 - Math.random());
+
+                    // Reiniciar intervalo anterior
+                    if (this.slideInterval) clearInterval(this.slideInterval);
+
+                    // Mostrar primera foto inmediatamente
+                    let i = 0;
+                    this.currentSlide = this.currentPhotoList[0].url;
+
+                    // Cambiar foto cada 4 segundos
+                    this.slideInterval = setInterval(() => {
+                        i = (i + 1) % this.currentPhotoList.length;
+                        this.currentSlide = this.currentPhotoList[i].url;
+                    }, 4000);
+                },
+
+                setupObserver() {
+                    const options = { threshold: 0.5 }; // Cuando el 50% del texto es visible
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('active');
+                                
+                                // Obtener índice del párrafo (seg-0, seg-1...)
+                                const index = entry.target.id.split('-')[1];
+                                const segment = this.letterSegments[index];
+                                
+                                // Iniciar slideshow con los años correspondientes
+                                if(segment) this.startSlideshow(segment.years);
+                            }
+                        });
+                    }, options);
+
+                    // Esperar a que Vue renderice el DOM
+                    setTimeout(() => {
+                        document.querySelectorAll('.story-block').forEach(el => observer.observe(el));
+                    }, 1000);
+                },
+
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Entornos virtuales y basura
+venv/
+__pycache__/
+*.pyc
+
+# Carpeta con videos pesados
+desorden/
+
+# Nunca más respaldos de git dentro del repo
+.git_backup/
+
+# Videos
+*.mp4
+*.avi
+*.mkv
