@@ -49,11 +49,20 @@ def lista_fotos_cronologicas(request):
     path = os.path.join(settings.MEDIA_ROOT, 'fotos_cronologicas')
     fotos = []
     if os.path.exists(path):
-        # Listamos los archivos y los ordenamos alfabéticamente (que ahora es cronológico)
         archivos = sorted([f for f in os.listdir(path) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.mp4'))])
         for f in archivos:
             fotos.append({
                 'url': f'/media/fotos_cronologicas/{f}',
-                'year': f.split('_')[0] # Extraemos el año del nombre (2021_...)
+                'year': f.split('_')[0]
             })
+    return JsonResponse({'fotos': fotos})
+
+def lista_fotos_categoria(request, categoria):
+    """Devuelve las fotos de una categoría específica (subcarpeta de media/fotos/)"""
+    path = os.path.join(settings.MEDIA_ROOT, 'fotos', categoria)
+    fotos = []
+    if os.path.exists(path):
+        archivos = sorted([f for f in os.listdir(path) if f.lower().endswith(('.jpg', '.jpeg', '.png'))])
+        for f in archivos:
+            fotos.append(f'/media/fotos/{categoria}/{f}')
     return JsonResponse({'fotos': fotos})

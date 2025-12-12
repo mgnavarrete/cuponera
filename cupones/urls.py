@@ -7,4 +7,5 @@ urlpatterns = [
     path('api/cupones/', views.lista_cupones, name='lista_cupones'), # Datos JSON
     path('api/canjear/<int:id>/', views.canjear_cupon, name='canjear_cupon'), # Acción
     path('api/fotos/', views.lista_fotos_cronologicas, name='lista_fotos'),
+    path('api/fotos/<str:categoria>/', views.lista_fotos_categoria, name='lista_fotos_categoria'),
 ]

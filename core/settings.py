@@ -79,8 +79,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cuponera_db',
-        'USER': 'menta',       # Tu usuario de MySQL
-        'PASSWORD': 'mint',       # Tu contraseña de MySQL
+        'USER': 'root',       # Tu usuario de MySQL
+        'PASSWORD': 'menta',       # Tu contraseña de MySQL
         'HOST': 'localhost',
         'PORT': '3306',
     }

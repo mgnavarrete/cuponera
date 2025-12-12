@@ -8,10 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
     
     <style>
-        /* --- ESTILOS GENERALES (TUS ESTILOS ORIGINALES) --- */
+        /* --- ESTILOS GENERALES --- */
         body { 
             font-family: 'Montserrat', sans-serif; 
-            background-color: #1a1a1a; /* Fondo oscuro para el slideshow */
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
             overflow-x: hidden;
             margin: 0;
         }
@@ -25,11 +25,11 @@
             background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
-            z-index: 3000; /* Capa superior */
+            z-index: 3000;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 1.5s cubic-bezier(0.86, 0, 0.07, 1); /* Salida suave hacia arriba */
+            transition: transform 1.5s cubic-bezier(0.86, 0, 0.07, 1);
         }
 
         @keyframes gradientBG {
@@ -123,63 +123,164 @@
             100% { transform: translateY(0px); }
         }
 
-        /* CLASE PARA OCULTAR LOGIN (Ahora usamos slide-up) */
         .slide-up-fade {
             transform: translateY(-100%);
             pointer-events: none;
         }
 
         /* ============================================================
-           NUEVOS ESTILOS PARA LA HISTORIA (SCROLL) Y FOTOS
+           ESTILOS PARA LA HISTORIA
            ============================================================ */
         
-        /* Capa de fondo para el slideshow */
         .background-layer {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
-            background: #000;
-        }
-        
-        .bg-slide {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; opacity: 0; transition: opacity 2s ease-in-out;
-            filter: brightness(0.7); /* Más claro para ver bien las fotos */
-        }
-        
-        /* Efecto Ken Burns (Movimiento suave de fotos) */
-        .ken-burns {
-            animation: kenBurns 10s infinite alternate linear;
-            opacity: 1; /* Hace visible la foto activa */
-        }
-        @keyframes kenBurns {
-            from { transform: scale(1); }
-            to { transform: scale(1.1); }
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
         }
 
-        /* Contenedor del texto scroll */
-        .story-container { position: relative; z-index: 10; padding-bottom: 200px; }
-        
+        .story-wrapper {
+            position: relative;
+            z-index: 10;
+            padding: 40px 20px;
+        }
+
         .story-block { 
-            min-height: 100vh; /* Cada párrafo ocupa toda la pantalla */
-            display: flex; align-items: center; justify-content: center; 
-            padding: 20px; box-sizing: border-box;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
         }
         
         .story-card {
-            background: rgba(0, 0, 0, 0.3); /* Fondo oscuro muy sutil */
-            backdrop-filter: blur(2px);
-            border: none; 
-            border-radius: 20px;
-            padding: 2rem; max-width: 650px; 
-            box-shadow: none;
-            transform: translateY(50px); opacity: 0; transition: all 0.8s ease-out;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 25px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             text-align: justify;
-            color: #fff; /* Texto blanco */
+            color: #3d3d3d;
+            width: 100%;
+            max-width: 700px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
         }
         
-        /* Animación cuando entra el texto */
-        .story-block.active .story-card { transform: translateY(0); opacity: 1; }
+        .story-block.visible .story-card {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        /* Estilos Cupones (Fase Final) */
+        .story-title {
+            font-family: 'Playfair Display', serif;
+            color: #2d2d2d;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .story-text {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #3d3d3d;
+        }
+
+        /* --- CARRUSEL DE FOTOS --- */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            background: rgba(0,0,0,0.1);
+        }
+
+        .carousel-inner {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-image {
+            position: absolute;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            border-radius: 10px;
+        }
+
+        .carousel-image.active {
+            opacity: 1;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .carousel-dot.active {
+            background: #fff;
+            transform: scale(1.2);
+        }
+
+        .carousel-arrows {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        .carousel-arrow {
+            background: rgba(255,255,255,0.7);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .carousel-arrow:hover {
+            background: #fff;
+            transform: scale(1.1);
+        }
+
+        /* Estilos Cupones */
         .coupons-view { 
             background-color: #fdfbfb; min-height: 100vh; 
             padding-top: 80px; position: relative; z-index: 20;
@@ -194,6 +295,7 @@
     {% verbatim %}
     <div id="app" v-cloak>
 
+        <!-- PANTALLA DE LOGIN -->
         <div class="login-screen" :class="{ 'slide-up-fade': currentPhase !== 'login' }">
             
             <div class="circle" style="width: 100px; height: 100px; top: 10%; left: 10%;"></div>
@@ -216,23 +318,54 @@
             </div>
         </div>
 
-
+        <!-- SECCIONES DE LA CARTA -->
         <div v-show="currentPhase === 'letter'">
             
             <div class="background-layer">
-                <img v-if="currentSlide" :src="currentSlide" class="bg-slide ken-burns" :key="currentSlide">
+                <div class="circle" style="width: 120px; height: 120px; top: 5%; left: 5%;"></div>
+                <div class="circle" style="width: 80px; height: 80px; top: 15%; right: 10%; animation-delay: 1s;"></div>
+                <div class="circle" style="width: 150px; height: 150px; bottom: 30%; left: 8%; animation-delay: 2s;"></div>
+                <div class="circle" style="width: 100px; height: 100px; bottom: 10%; right: 15%; animation-delay: 3s;"></div>
             </div>
 
-            <div class="story-container">
+            <div class="story-wrapper">
                 <div v-for="(segment, index) in letterSegments" :key="index" :id="'seg-'+index" class="story-block">
                     <div class="story-card">
-                        <h3 v-if="segment.title" style="font-family: 'Playfair Display'; color: #ffb6c1; margin-bottom: 1rem; text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
-                            {{ segment.title }}
-                        </h3>
-                        <div style="font-size: 1.1rem; line-height: 1.8; color: #fff; text-shadow: 1px 1px 6px rgba(0,0,0,0.9);" v-html="segment.text"></div>
+                        
+                        <!-- Título si existe -->
+                        <h3 v-if="segment.title" class="story-title">{{ segment.title }}</h3>
+                        
+                        <!-- Carrusel si existe -->
+                        <div v-if="segment.carousel && carouselImages[segment.carousel]" class="carousel-container">
+                            <div class="carousel-inner">
+                                <img 
+                                    v-for="(img, imgIndex) in carouselImages[segment.carousel]" 
+                                    :key="imgIndex"
+                                    :src="img"
+                                    :class="['carousel-image', { active: carouselIndexes[segment.carousel] === imgIndex }]"
+                                    alt="Foto"
+                                >
+                            </div>
+                            <div class="carousel-arrows">
+                                <button class="carousel-arrow" @click="prevImage(segment.carousel)">❮</button>
+                                <button class="carousel-arrow" @click="nextImage(segment.carousel)">❯</button>
+                            </div>
+                            <div class="carousel-controls">
+                                <span 
+                                    v-for="(img, imgIndex) in carouselImages[segment.carousel]" 
+                                    :key="imgIndex"
+                                    :class="['carousel-dot', { active: carouselIndexes[segment.carousel] === imgIndex }]"
+                                    @click="goToImage(segment.carousel, imgIndex)"
+                                ></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Texto -->
+                        <div class="story-text" v-html="segment.text"></div>
 
+                        <!-- Botón final -->
                         <div v-if="index === letterSegments.length - 1" class="text-center mt-5">
-                            <a href="/cupones/" class="btn btn-lg btn-danger rounded-pill px-5 shadow pulse-btn" style="background-color: #e73c7e; border: none; text-decoration: none;">
+                            <a href="/cupones/" class="btn btn-lg btn-danger rounded-pill px-5 shadow" style="background-color: #e73c7e; border: none; text-decoration: none;">
                                 🎁 Abrir Regalo Final
                             </a>
                         </div>
@@ -241,13 +374,11 @@
             </div>
         </div>
 
-
     </div>
     {% endverbatim %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
@@ -256,88 +387,129 @@
         createApp({
             data() {
                 return {
-                    // --- ESTADO GLOBAL ---
-                    currentPhase: 'login', // Puede ser: 'login', 'letter'
-
-                    // --- LOGIN DATA ---
+                    currentPhase: 'login',
                     passwordInput: '',
                     correctPassword: 'rinoceronte',
                     attempts: 0,
                     hintsList: [],
                     isShaking: false,
 
-                    // --- FOTOS & SLIDESHOW ---
-                    allPhotos: [],
-                    currentPhotoList: [],
-                    currentSlide: null,
-                    slideInterval: null,
+                    // Imágenes de cada carrusel
+                    carouselImages: {},
+                    carouselIndexes: {},
+                    carouselIntervals: {},
 
-                    // --- CARTA (Texto completo mapeado a años) ---
+                    // Secciones de la carta
                     letterSegments: [
                         {
-                            title: "Feliz 4 años!",
-                            years: ["2021"], 
-                            text: "Hola Flo, bienvenida a esta gran locurita que es tu regalo de los 4 años. Estuve pensando mucho tiempo en qué te puedo regalar. Sé que soy bueno para las manualidades y que te he regalado muchas cosas locas, y quería también hacer una cosa loca para estos cuatro años. Como soy un emprendedor, un desarrollador computín y también un poco perkin, quise hacer esta página como regalo tuyo para encapsular un poco todos nuestros recuerdos y locuritas."
+                            title: "💕 Feliz 4 años! 💕",
+                            text: `Hola mi Flo, bienvenida a esta gran locurita que es tu regalo de 4 años estuve pensando mucho tiempo, en qué te puedo regalar y sé que soy bueno para las manualidades y que te he regalado muchas cosas locas y quería también hacer algun regalo loco para estos 4 años como soy un emprendedor desarrollador computin y también un poco perkin, quise hacer esta página como regalo tuyo para encapsular un todos nuestros recuerdos y locuritas. 🎁
+                            <br><br>
+                            En esta locura de regalo vamos a pasar por distintos viajes y momentos que me hacen recordar lo mucho que te amo y lo feliz que me has hecho durante todos estos 4 años que hemos estado juntos. 4 años que son caleta de años. ¿Cuántos años son 4 años? 4 años. muchos añooos. 🥳`
+                        },
+                      
+                        {
+                            carousel: "conocimos",
+                            text: `Es loco pensar que hace un poco más de 4 años atrás nos conocimos en pandemia y luego coincidimos en ese carrete en mi casa, demasiado random, con gente muy random pero que yo creo que dio inicio a una amistad muy bonita que dio paso a una relación perfecta que hasta el día de hoy me cuesta creer lo perfecta que es. `
                         },
                         {
-                           
-                            text: "Estuve buscando muchas fotos que vas a ver ahora mientras lees este mensaje (se van a ir desplegando) y, mientras las revisaba, fui recordando todas las locuras que hemos hecho. Es loco ver lo rápido que pasa el tiempo. Te juro que yo miraba las fotos desde que recién apareció tu cara en Google Fotos, hace un poquito más de 4 años atrás, de cuando nos conocimos en mi casa en ese carrete muy random, y te juro que a veces es como si esto fuera ayer. La vida pasa tan rápido, o el tiempo contigo pasa aun mas rápido, que me hace sentir que lo hemos disfrutado a concho."
+                            carousel: "proyecta",
+                            text: `Gracias Proyecta, que es loco pensar que en este voluntariado que quiero mucho, me hizo conocer a una de las personas más importantes de mi vida. Yo creo que es algo que nunca voy a poder agradecer lo suficiente.
+                            <br><br>
+                            No solo aca crecí como persona sino que te conocí a ti, que me mostró que existen personas de mi mismo pensamiento, y que compartimos las mismas cosas y gustos, y que calzamos perfecto. Por eso compré un boxer de 50 lucas. Lo hice por ti, no de impulsividad jejejej 🩲`
                         },
                         {
-                    
-                            text: "Hemos hecho locuras terribles, pero muy entretenidas: desde que te fuiste con nosotros al sur cuando llevábamos casi una semana juntos, hasta todos los viajes que hemos hecho con mi familia y con tu familia. Conocer San Andrés, Búzios, conocer a tus amigos, mis amigos y compartir las amistades. Siento que, para mí, ver todas esas fotos da nostalgia y harta felicidad de saber que estos años han sido muy bacanes y muy bonitos, y siento que gran parte de eso es gracias a estar contigo y a tenerte a mi lado."
+                            carousel: "amigos",
+                            text: `Me gusta saber que además de que calzamos mucho, coincidimos también en nuestras amistades. Siento que, con nombre QLO, que es un grupo que yo siempre le he tenido mucho cariño, y me encanta que tú también te hayas unido a este como si fueran amigos de toda la vida, y que también ellos te tengan cariño.
+                            <br><br>
+                            Tambien me gusta que yo me he llevado bien con tus amigos, con la Chio, con las Fers, la Coni, el Chandi, el Santi, el Cris. Al final es cierto que también una base importante de la relación es poder congeniar con las amistades y ser un aporte más que una molestia. Y me encanta eso de nosotros, que podamos pasarlo bien con las personas que más queremos y compartir también esos momentos.`
                         },
                         {
-                          
-                            text: "Viendo esas fotos, los dos tenemos cara de niños y que pasamos de ser unos vecinos en Chicureo, compañeros de Proyecta, de ser yo tu chofer que te llevaba a los carretes porque me quedaba ahí cerca y te iba a ir a buscar, a pasar a tener una muy bonita relación, una muy bonita polola. Siento que he crecido mucho contigo y hemos vivido etapas muy importantes. Me ayudaste en muchas cosas en la U, a un poco enderezarme, a quererme, a entenderme y también a creer en mí. Siento que has sido un aporte fundamental para que yo me crea el cuento y sepa que sí, yo soy capaz y sí soy bacán. Yo creo que tú has influenciado mucho en eso también."
+                            carousel: "familia",
+                            text: `Y así mismo, como congeniamos con los amigos, una cosa que más me gusta es cómo congeniamos con nuestras familias. Me encanta que tú ya eres parte de la mía, yo me siento ya parte de la tuya, y que tanto mi familia como tu familia nos quieran mucho, y es bacán también que ambas familias se lleven bien.
+                            <br><br>
+                            Siento que ambos tenemos un ambiente de familia muy parecido. Y siento que eso también aporta mucho a que todo fluya muy bien. Te amoooooooooo! ❤️`
                         },
                         {
-                           
-                            text: "Hemos comenzado juntos este mundo laboral donde ahora los dos somos adultos responsables con trabajos y obligaciones. Yo creo que los dos estamos muy felices con lo que estudiamos y en dónde hemos trabajado, y a pesar de que tú tuviste tu crisis vocacional, para eso siempre hemos estado acá, para apoyarte en todo lo que necesites, guiarte también si es que necesitas apoyo en eso. Así mismo como tú me has dado todo ese apoyo, yo también estuve y estaré ahí para todo."
+                            carousel: "viajes",
+                            text: `Ni te explico la cantidad de foto que hay de viajes jajajaj. Encuentro muy bacán que hemos tenido la oportunidad de viajar por Chile, viajar fuera de Chile, compartir viajes con tu familia, también con mi familia, y saber que disfrutamos estar juntos, estar con nuestra familia, conocer y disfrutar de la buena vida.
+                            <br><br>
+                            Ahora se viene nuestro primer viaje solitos a Disney World, que me tiene muy feliz y muy ansioso. Y espero con muchas ansias poder ir y pasarrloo bombaaaaa. 🏰`
                         },
                         {
-                           
-                            text: "Me da risa que siempre he escuchado que las relaciones tienen como este periodo de luna de miel que dura tres meses y que después todo es distinto, pero yo creo que la gente no sabe lo que es realmente encontrar a alguien que calza contigo. Porque yo siento que desde el momento en que salimos, el momento en que comenzamos esta bonita relación, esa luna de miel no se ha acabado. Sí, hemos tenido sus discusiones, momentos difíciles, pero siento que todas esas cosas nos han hecho más fuertes, más unidos, y esas son las cosas que al final hacen que una pareja crezca. Siempre el tenerte a mi lado como amiga, como confidente, como polola, ha sido lo mejor que me ha pasado en esta vida."
-                        },
-
-                        {
-                     
-                            text: "Te quería también dar las gracias por todo, porque siento que estos 4 años, y donde estoy ahora mismo, no hubiera sido lo mismo sin ti. Tú has sido un pilar fundamental en todos mis logros. Aunque no es quitarme el mérito de las cosas que yo he hecho, sí has sido un impulso, una motivación, una fuente de energía gigante para sacar adelante todos los proyectos que yo me propongo. Sé que siempre has estado a mi lado apoyándome en cada fracaso, en cada logro, en cada premio, y yo creo que sin ti nunca hubiera sido lo mismo. Así que gracias por ser esa motivación."
+                            carousel: "carrera",
+                            text: `Bueno, y otra cosa que admiro mucho de ti es la pasión que le tienes a tu carrera. Se nota mucho el amor y cariño que le pones a todo lo que haces, y en especial a esta carrera que es tan sacrifiada.
+                            <br><br>
+                            Y me encanta verte con esa pasión, aportando en voluntariados, aportando tu granito de arena, tu saco de arena, tus toneladas de arena a todo lo que haces. Y yo sé, estoy más que seguro, de que vas a lograr muchas cosas, vas a ser la mejor trabajadora social que va a tener Chile y el mundo. Y me encanta ver cómo logras cada meta que te propones. Te amo mucho mi trabajadora sexual. 😏`
                         },
                         {
-                           
-                            text: "Te amo con todo mi corazón y me emociona mucho saber todo lo que se nos viene. Si ya llevamos 4 años, que es harto tiempo, me imagino cómo será todo lo que se viene proyectos de vida, viajar, crecer... al final, vivir una vida contigo es vivir la vida, que es lo que más feliz me hace."
+                            carousel: "comida",
+                            text: `Y obviamente no pueden faltar todas las fotos de los lugares donde hemos salido a comer. Yo sé que nos encanta la vida de ricos y famosos, y disfrutar de un buen lomo salteado, de unos buenos tallerines a la huancaina, y me encanta poder disfrutar esos momentos, poder conversar, hablar, escucharnos, y al final disfrutar la vida, porque para eso estamos, para ser felices y comer rico. 🍽️`
                         },
                         {
-                            
-                            text: "Y falta mencionar Orlandoooo, viaje que me tiene demasiado emocionado y feliz, pero no solamente porque vamos a Orlando y vamos a Disney y vamos a conocer a Mickey Mouse y a Harry Potter, estoy muy feliz porque siento que este va a ser un hito importante en nuestra relación. El viajar a otro país solos nos va a ayudar a crecer más de lo que ya hemos crecido, y estoy más que seguro de que me va a recalcar y asegurar de que siempre serás y fuiste tú. Te amo mucho."
+                            carousel: "nosotros",
+                            text: `También es lindo ver todos esos momentos que hemos tenido juntos. Los panoramas locos que se nos ocurren, salir a caminar, andar en bici, ir a la playa, ir a ver boxeo, cine 4dx jajaja.
+                            <br><br>
+                            Yo creo que ser personas que nos gusta andar moviéndonos y hacer panoramas locos es lo más entretenido. Al final, una vida así es bacán, es feliz, y me encanta que podamos compartir también ese gusto de hacer cosas distintas y sin miedo al exito. 🚀`
                         },
                         {
-                            
-                            text: "Así que gracias por estos cuatro años que, de verdad, los siento como nada, que han volado, pero siento que es el comienzo de todo este proyecto de vida que de la mano vamos a construir. Te amo mucho y espero que te haya gustado este pequeño regalo. Ahora se viene un ultimo regalo, el botoncito donde, cuando lo aprietes, te va a llevar a la última parte del regalo para que lo disfrutes (y lo disfrutemos) en este viaje que se nos viene."
+                            carousel: "loquita",
+                            text: `Y hablando de cosas locas, no pueden faltar todas tus locuras, que es bacán el que puedas ser tú conmigo. Y verte haciendo locuritas, cantando en el auto, riendo, poniendo caritas.
+                            <br><br>
+                            Verte ser tú es lo que me hace más feliz. Y que sientas esa confianza de poder hacerlo a mi lado me hace ser el hombre más ofortunado del mundo, WIIIICKEEEEEED. 🧙‍♀️`
+                        },
+                        {
+                            carousel: "rino",
+                            text: `🦏 UN RINOOOOOO. Qué loco que haya rinocerontes en todos lados. Yo creo que esto es algo que no se habla mucho, pero debería ser un tema de estudio.
+                            <br><br>
+                            Porque no tiene sentido que un animal tan poco comun y que te haya puesto este apodo por ninguna razon, y que ahora es parte de nuestras vidas y aparece hasta en la tapa del baño. Pero es algo que me encanta y son señales que me aseguran de que eres tú. Siempre has sido tú.`
+                        },
+                        {
+                            carousel: "heladitos",
+                            text: `🍦 Y puede que hayas pensado de que se me habia pasado todas estas fotos y te juro que viéndolas y juntandolas me mataba de las risas de tus caritas, todas manchas y creo que faltan muchas fotos mas.
+                            <br><br>
+                            Me encanta que te guste tomar helado y que seas tan desordenada para tomar Y creo que esta es una parte de ti que adoro. Me encanta poder regalarte heladitos y verte comer como si tuvieras 2, pero es tu esencia y de eso es de lo que yo me he enamorado todos estos años, de ti, de cómo tú eres.`
+                        },
+                        {
+                            carousel: "linda",
+                            text: `Y pasamos tristemente a la última sección de fotitos, en donde como puedes ver estás tú, que eres tan linda te amo tanto.
+                            <br><br>
+                            Es loco ver lo rápido que pasa el tiempo. Te juro que yo miraba las fotos desde que recién apareció tu cara en Google Fotos, hace un poquito más de 4 años atrás, de cuando nos conocimos en mi casa en ese carrete muy random, y te juro que a veces es como si esto fuera ayer. La vida pasa tan rápido, o el tiempo contigo pasa aun mas rápido, que me hace sentir que lo hemos disfrutado a concho.
+                            <br><br>
+                            Hemos hecho locuras terribles, pero muy entretenidas: desde que te fuiste con nosotros al sur cuando llevábamos casi una semana juntos, hasta todos los viajes que hemos hecho con mi familia y con tu familia. Conocer San Andrés, Búzios, conocer a tus amigos, mis amigos y compartir las amistades. Siento que, para mí, ver todas esas fotos da nostalgia y harta felicidad de saber que estos años han sido muy bacanes y muy bonitos, y siento que gran parte de eso es gracias a estar contigo y a tenerte a mi lado.
+                            <br><br>
+                            Hemos crecido mucho. Viendo esas fotos, los dos tenemos cara de niños y que pasamos de ser unos vecinos en Chicureo, compañeros de Proyecta, de ser yo tu chofer que te llevaba a los carretes porque me quedaba ahí cerca y te iba a ir a buscar, a pasar a tener una muy bonita relación, una muy bonita polola. Siento que he crecido mucho contigo y hemos vivido etapas muy importantes. Me ayudaste en muchas cosas en la U, a un poco enderezarme, a quererme, a entenderme y también a creer en mí. Siento que has sido un aporte fundamental para que yo me crea el cuento y sepa que sí, yo soy capaz y sí soy bacán. Yo creo que tú has influenciado mucho en eso también.
+                            <br><br>
+                            Hemos comenzado juntos este mundo laboral donde ahora los dos somos adultos responsables con trabajos y obligaciones. Yo creo que los dos estamos muy felices con lo que estudiamos y en dónde hemos trabajado, y a pesar de que tú tuviste tu crisis vocacional, para eso siempre hemos estado acá, para apoyarte en todo lo que necesites, guiarte también si es que necesitas apoyo en eso. Así mismo como tú me has dado todo ese apoyo, yo también estuve y estaré ahí para todo.
+                            <br><br>
+                            Me da risa que siempre he escuchado que las relaciones tienen como este periodo de "luna de miel" que dura tres meses y que después todo es distinto, pero yo creo que la gente no sabe lo que es realmente encontrar a alguien que calza contigo. Porque yo siento que desde el momento en que salimos, el momento en que comenzamos esta bonita relación, esa luna de miel no se ha acabado. Sí, hemos tenido sus discusiones, momentos difíciles, pero siento que todas esas cosas nos han hecho más fuertes, más unidos, y esas son las cosas que al final hacen que una pareja crezca. <strong>Siempre el tenerte a mi lado como amiga, como confidente, como polola, ha sido lo mejor que me ha pasado en esta vida.</strong> 💖
+                            <br><br>
+                            Te quería también dar las gracias por todo, porque siento que estos 4 años, y donde estoy ahora mismo, no hubiera sido lo mismo sin ti. Tú has sido un pilar fundamental en todos mis logros. Aunque no es quitarme el mérito de las cosas que yo he hecho, sí has sido un impulso, una motivación, una fuente de energía gigante para sacar adelante todos los proyectos que yo me propongo. Sé que siempre has estado a mi lado apoyándome en cada fracaso, en cada logro, en cada premio, y yo creo que sin ti nunca hubiera sido lo mismo. Así que gracias por ser esa motivación.
+                            <br><br>
+                            Te amo con todo mi corazón y me emociona mucho saber todo lo que se nos viene. Si ya llevamos 4 años, que es harto tiempo, me imagino cómo será todo lo que se viene proyectos de vida, viajar, crecer... al final, vivir una vida contigo es vivir la vida, que es lo que más feliz me hace. ❤️
+                            <br><br>
+                            🏰✨ Y falta mencionar Orlandoooo, viaje que me tiene demasiado emocionado y feliz, pero no solamente porque vamos a Orlando y vamos a Disney y vamos a conocer a Mickey Mouse y a Harry Potter, estoy muy feliz porque siento que este va a ser un hito importante en nuestra relación. El viajar a otro país solos nos va a ayudar a crecer más de lo que ya hemos crecido, y estoy más que seguro de que me va a recalcar y asegurar de que siempre serás y fuiste tú. Te amo mucho.
+                            <br><br>
+                            Así que gracias por estos cuatro años que, de verdad, los siento como nada, que han volado, pero siento que es el comienzo de todo este proyecto de vida que de la mano vamos a construir. Te amo mucho y espero que te haya gustado este pequeño regalo. Ahora se viene un ultimo regalo, el botoncito donde, cuando lo aprietes, te va a llevar a la última parte del regalo para que lo disfrutes (y lo disfrutemos) en este viaje que se nos viene.
+                            <br><br>
+                            <strong style="font-size: 1.3rem;">Te amo. 💕</strong>`
                         }
                     ]
                 }
             },
             mounted() {
-                this.loadPhotos();     // Carga las 180 fotos
-                this.setupObserver();  // Inicia detector de scroll
+                this.loadAllCarousels();
+                this.setupScrollObserver();
             },
             methods: {
-                // --- 1. LÓGICA LOGIN (TUYA) ---
+                // --- LOGIN ---
                 checkPassword() {
                     const input = this.passwordInput.toLowerCase().trim();
                     if (input === this.correctPassword) {
                         this.lanzarConfetiEntrada();
-                        
-                        // TRANSICIÓN A LA CARTA
                         this.currentPhase = 'letter';
-                        
-                        // Pequeño hack para asegurar que el scroll empiece arriba
                         setTimeout(() => window.scrollTo(0,0), 100);
-
                     } else {
-                        // PASSWORD INCORRECTO
                         this.triggerShake();
                         this.attempts++;
                         this.passwordInput = ''; 
@@ -354,64 +526,59 @@
                     confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff9a9e', '#fad0c4', '#ffffff'] });
                 },
 
-                // --- 2. LÓGICA DE FOTOS Y SLIDESHOW ---
-                async loadPhotos() {
-                    try {
-                        // Asegúrate de que esta URL exista en tu backend
-                        const response = await axios.get('/api/fotos/');
-                        this.allPhotos = response.data.fotos;
-                        console.log("Fotos cargadas:", this.allPhotos.length);
-                    } catch (error) { console.error("Error cargando fotos", error); }
-                },
-
-                startSlideshow(years) {
-                    // Filtrar fotos que coincidan con los años del párrafo
-                    let filtered = this.allPhotos.filter(p => years.includes(p.year));
+                // --- CARRUSELES ---
+                async loadAllCarousels() {
+                    const folders = ['conocimos', 'proyecta', 'amigos', 'familia', 'viajes', 'carrera', 'comida', 'nosotros', 'loquita', 'rino', 'heladitos', 'linda'];
                     
-                    // Si no hay fotos de ese año exacto, usamos todas como respaldo
-                    if (filtered.length === 0) filtered = this.allPhotos;
-                    if (filtered.length === 0) return; // No hay fotos en absoluto
-
-                    // Mezclar aleatoriamente
-                    this.currentPhotoList = filtered.sort(() => 0.5 - Math.random());
-
-                    // Reiniciar intervalo anterior
-                    if (this.slideInterval) clearInterval(this.slideInterval);
-
-                    // Mostrar primera foto inmediatamente
-                    let i = 0;
-                    this.currentSlide = this.currentPhotoList[0].url;
-
-                    // Cambiar foto cada 4 segundos
-                    this.slideInterval = setInterval(() => {
-                        i = (i + 1) % this.currentPhotoList.length;
-                        this.currentSlide = this.currentPhotoList[i].url;
-                    }, 4000);
+                    for (const folder of folders) {
+                        try {
+                            const response = await fetch(`/api/fotos/${folder}/`);
+                            const data = await response.json();
+                            this.carouselImages[folder] = data.fotos;
+                            this.carouselIndexes[folder] = 0;
+                            
+                            // Auto-avance del carrusel
+                            this.carouselIntervals[folder] = setInterval(() => {
+                                this.nextImage(folder);
+                            }, 4000);
+                        } catch (error) {
+                            console.error(`Error cargando fotos de ${folder}:`, error);
+                        }
+                    }
                 },
 
-                setupObserver() {
-                    const options = { threshold: 0.5 }; // Cuando el 50% del texto es visible
-                    const observer = new IntersectionObserver((entries) => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting) {
-                                entry.target.classList.add('active');
-                                
-                                // Obtener índice del párrafo (seg-0, seg-1...)
-                                const index = entry.target.id.split('-')[1];
-                                const segment = this.letterSegments[index];
-                                
-                                // Iniciar slideshow con los años correspondientes
-                                if(segment) this.startSlideshow(segment.years);
-                            }
-                        });
-                    }, options);
+                nextImage(folder) {
+                    if (!this.carouselImages[folder]) return;
+                    const total = this.carouselImages[folder].length;
+                    this.carouselIndexes[folder] = (this.carouselIndexes[folder] + 1) % total;
+                },
 
-                    // Esperar a que Vue renderice el DOM
+                prevImage(folder) {
+                    if (!this.carouselImages[folder]) return;
+                    const total = this.carouselImages[folder].length;
+                    this.carouselIndexes[folder] = (this.carouselIndexes[folder] - 1 + total) % total;
+                },
+
+                goToImage(folder, index) {
+                    this.carouselIndexes[folder] = index;
+                },
+
+                // --- SCROLL OBSERVER ---
+                setupScrollObserver() {
                     setTimeout(() => {
-                        document.querySelectorAll('.story-block').forEach(el => observer.observe(el));
-                    }, 1000);
-                },
+                        const observer = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    entry.target.classList.add('visible');
+                                }
+                            });
+                        }, { threshold: 0.2 });
 
+                        document.querySelectorAll('.story-block').forEach(el => {
+                            observer.observe(el);
+                        });
+                    }, 500);
+                }
             }
         }).mount('#app')
     </script>
