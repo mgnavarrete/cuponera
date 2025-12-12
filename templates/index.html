@@ -143,14 +143,15 @@
             position: relative;
             z-index: 10;
             padding: 40px 20px;
+            padding-bottom: 100px;
         }
 
         .story-block { 
-            min-height: 100vh;
+            min-height: auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px 0;
+            padding: 40px 0;
         }
         
         .story-card {
@@ -173,6 +174,27 @@
         .story-block.visible .story-card {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* Estilos responsive para móviles */
+        @media (max-width: 768px) {
+            .story-card {
+                padding: 1.5rem 1.2rem;
+                border-radius: 20px;
+            }
+            
+            .story-title {
+                font-size: 1.5rem;
+            }
+            
+            .story-text {
+                font-size: 0.95rem;
+                line-height: 1.7;
+            }
+            
+            .carousel-inner {
+                height: 280px;
+            }
         }
 
         .story-title {
@@ -572,11 +594,22 @@
                                     entry.target.classList.add('visible');
                                 }
                             });
-                        }, { threshold: 0.2 });
+                        }, { 
+                            threshold: 0.05,  // Más sensible para detectar secciones
+                            rootMargin: '50px' // Detecta un poco antes
+                        });
 
                         document.querySelectorAll('.story-block').forEach(el => {
                             observer.observe(el);
                         });
+
+                        // Fallback: hacer visible la última sección después de un tiempo
+                        setTimeout(() => {
+                            const blocks = document.querySelectorAll('.story-block');
+                            if (blocks.length > 0) {
+                                blocks[blocks.length - 1].classList.add('visible');
+                            }
+                        }, 2000);
                     }, 500);
                 }
             }
